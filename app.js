@@ -36,7 +36,7 @@ const elements = {
 let items = loadItems();
 let deletedItem = null;
 let toastTimer = null;
-let sortOrder = localStorage.getItem(SORT_KEY) || "price-desc";
+let sortOrder = localStorage.getItem(SORT_KEY) === "daily-desc" ? "daily-desc" : "price-desc";
 let editingId = null;
 
 function localDateString(date = new Date()) {
@@ -93,8 +93,10 @@ function escapeHtml(value) {
 }
 
 function render() {
-  const direction = sortOrder === "price-asc" ? 1 : -1;
-  const sortedItems = [...items].sort((a, b) => (a.price - b.price) * direction);
+  const sortValue = (item) => sortOrder === "daily-desc"
+    ? item.price / daysOwned(item.purchaseDate)
+    : item.price;
+  const sortedItems = [...items].sort((a, b) => sortValue(b) - sortValue(a));
   const cards = sortedItems.map((item) => {
     const days = daysOwned(item.purchaseDate);
     const daily = item.price / days;
