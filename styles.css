@@ -431,8 +431,10 @@ h1 {
 .item-name {
   max-width: calc(100% - 36px);
   overflow: hidden;
-  font-size: 12px;
-  font-weight: 650;
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 720;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -444,13 +446,13 @@ h1 {
 }
 
 .item-price {
-  margin-top: 9px;
-  font-size: 11px;
+  margin-top: 10px;
+  font-size: 9px;
 }
 
 .item-date {
   margin-top: 2px;
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .edit-date {
@@ -472,25 +474,29 @@ h1 {
 
 .item-days {
   margin-top: 6px;
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .daily-cost {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
   margin-top: auto;
   text-align: left;
   white-space: nowrap;
 }
 
 .daily-cost strong {
-  font-size: clamp(19px, 1.6vw, 24px);
-  font-weight: 650;
-  letter-spacing: -0.035em;
+  color: #f7f4ef;
+  font-size: clamp(25px, 2vw, 30px);
+  font-weight: 760;
+  letter-spacing: -0.05em;
+  line-height: 1;
 }
 
 .daily-cost small {
-  margin-left: 3px;
   color: #aaa6a0;
-  font-size: 9px;
+  font-size: 8px;
 }
 
 .item-actions {
@@ -792,12 +798,12 @@ h1 {
 
   .item-name {
     max-width: calc(100% - 36px);
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .item-price {
     margin-top: 8px;
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .item-date {
@@ -808,7 +814,7 @@ h1 {
   .item-days {
     margin-top: 5px;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .item-actions {
@@ -830,12 +836,11 @@ h1 {
   }
 
   .daily-cost strong {
-    font-size: clamp(18px, 5vw, 22px);
+    font-size: clamp(24px, 7vw, 29px);
   }
 
   .daily-cost small {
-    margin-left: 4px;
-    font-size: 10px;
+    font-size: 8px;
   }
 
   .add-card {
