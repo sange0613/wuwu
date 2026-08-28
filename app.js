@@ -171,22 +171,26 @@ function startEditing(item, focusField = "name", openDatePicker = false) {
   elements.purchaseDate.value = item.purchaseDate;
   elements.saveButton.textContent = "更新";
   elements.cancelEdit.hidden = false;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: focusField === "date" ? "auto" : "smooth" });
   if (focusField === "date") {
-    elements.purchaseDate.focus();
-    if (openDatePicker && typeof elements.purchaseDate.showPicker === "function") {
-      try {
-        elements.purchaseDate.showPicker();
-      } catch {
-        // Some browsers only allow the native picker under stricter user-gesture rules.
-      }
-    }
+    if (openDatePicker) openPurchaseDatePicker();
+    else elements.purchaseDate.focus();
     return;
   }
   window.setTimeout(() => {
     elements.name.focus();
     elements.name.select();
   }, 260);
+}
+
+function openPurchaseDatePicker() {
+  elements.purchaseDate.focus();
+  if (typeof elements.purchaseDate.showPicker !== "function") return;
+  try {
+    elements.purchaseDate.showPicker();
+  } catch {
+    // The native calendar icon remains available when a browser blocks showPicker().
+  }
 }
 
 function validate() {
@@ -316,6 +320,8 @@ elements.undoDelete.addEventListener("click", () => {
 [elements.name, elements.price, elements.purchaseDate].forEach((input) => {
   input.addEventListener("input", clearErrors);
 });
+
+elements.purchaseDate.addEventListener("click", openPurchaseDatePicker);
 
 const now = new Date();
 elements.today.dateTime = localDateString(now);
