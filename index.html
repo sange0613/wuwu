@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta
+      name="description"
+      content="记录物品价格与购买日期，自动计算每天成本。"
+    />
+    <title>无物 · 物品日均成本</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="无物首页">无物</a>
+      <time class="today" id="today"></time>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <h1 id="page-title">让每一次购买，<br class="mobile-break" />慢慢变轻。</h1>
+          <p>价格会停在付款那天，价值却在之后每天发生。</p>
+        </div>
+        <dl class="summary" aria-label="资产概览">
+          <div>
+            <dt>总资产</dt>
+            <dd id="total-assets">¥0</dd>
+          </div>
+          <div>
+            <dt>日均总成本</dt>
+            <dd><span id="total-daily-cost">¥0.00</span><small> / 天</small></dd>
+          </div>
+        </dl>
+        <button class="primary-button" id="toggle-form" type="button" aria-expanded="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>添加物品</span>
+        </button>
+      </section>
+
+      <section class="form-region is-open" id="form-region" aria-label="添加物品">
+        <form id="item-form" novalidate>
+          <div class="field">
+            <label for="name">物品名称</label>
+            <input id="name" name="name" type="text" maxlength="40" placeholder="例如：MacBook Air" autocomplete="off" />
+            <small class="error" id="name-error" aria-live="polite"></small>
+          </div>
+
+          <div class="field">
+            <label for="price">价格</label>
+            <div class="price-input">
+              <span aria-hidden="true">¥</span>
+              <input id="price" name="price" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="例如：8999" />
+            </div>
+            <small class="error" id="price-error" aria-live="polite"></small>
+          </div>
+
+          <div class="field">
+            <label for="purchase-date">购买日期</label>
+            <input id="purchase-date" name="purchaseDate" type="date" />
+            <small class="error" id="date-error" aria-live="polite"></small>
+          </div>
+
+          <div class="form-actions">
+            <button class="save-button" id="save-button" type="submit">保存</button>
+            <button class="cancel-edit" id="cancel-edit" type="button" hidden>取消编辑</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="items-section" aria-labelledby="items-title">
+        <div class="section-heading">
+          <div class="section-title">
+            <h2 id="items-title">我的物品</h2>
+            <span id="item-count" aria-live="polite"></span>
+          </div>
+          <label class="sort-control">
+            <span class="sr-only">排序方式</span>
+            <select id="sort-order">
+              <option value="price-desc">价格：从高到低</option>
+              <option value="price-asc">价格：从低到高</option>
+            </select>
+            <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4" /></svg>
+          </label>
+        </div>
+
+        <div class="ledger" id="ledger">
+          <div id="items-list"></div>
+        </div>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <p>还没有物品。</p>
+          <button type="button" id="empty-add">添加第一件物品</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+      <span>已删除</span>
+      <button id="undo-delete" type="button">撤销</button>
+    </div>
+  </body>
+</html>
