@@ -102,7 +102,7 @@ function render() {
       <article class="item-row" data-id="${item.id}">
         <span class="item-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
         <span class="item-price">${formatCurrency(item.price, item.price % 1 ? 2 : 0)}</span>
-        <time class="item-date" datetime="${item.purchaseDate}">${formatDate(item.purchaseDate)}</time>
+        <button class="item-date edit-date" type="button" aria-label="修改 ${escapeHtml(item.name)} 的购买日期" data-edit-date="${item.id}">${formatDate(item.purchaseDate)}</button>
         <span class="item-days">已拥有 ${days.toLocaleString("zh-CN")} 天</span>
         <span class="daily-cost"><strong>${formatCurrency(daily, 2)}</strong><small>每天</small></span>
         <div class="item-actions">
@@ -162,7 +162,7 @@ function exitEditMode() {
   clearErrors();
 }
 
-function startEditing(item) {
+function startEditing(item, focusField = "name", openDatePicker = false) {
   editingId = item.id;
   setFormOpen(true);
   clearErrors();
@@ -172,6 +172,17 @@ function startEditing(item) {
   elements.saveButton.textContent = "更新";
   elements.cancelEdit.hidden = false;
   window.scrollTo({ top: 0, behavior: "smooth" });
+  if (focusField === "date") {
+    elements.purchaseDate.focus();
+    if (openDatePicker && typeof elements.purchaseDate.showPicker === "function") {
+      try {
+        elements.purchaseDate.showPicker();
+      } catch {
+        // Some browsers only allow the native picker under stricter user-gesture rules.
+      }
+    }
+    return;
+  }
   window.setTimeout(() => {
     elements.name.focus();
     elements.name.select();
@@ -266,6 +277,12 @@ elements.list.addEventListener("click", (event) => {
     exitEditMode();
     setFormOpen(true, true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  const dateButton = event.target.closest("[data-edit-date]");
+  if (dateButton) {
+    const item = items.find((candidate) => candidate.id === dateButton.dataset.editDate);
+    if (item) startEditing(item, "date", true);
     return;
   }
   const editButton = event.target.closest("[data-edit]");

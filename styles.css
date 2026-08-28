@@ -453,6 +453,23 @@ h1 {
   font-size: 10px;
 }
 
+.edit-date {
+  align-self: flex-start;
+  padding: 0 0 1px;
+  border: 0;
+  border-bottom: 1px dashed transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.edit-date:hover,
+.edit-date:focus-visible {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
 .item-days {
   margin-top: 6px;
   font-size: 10px;
