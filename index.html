@@ -9,8 +9,10 @@
       content="记录物品价格与购买日期，自动计算每天成本。"
     />
     <title>无物 · 物品日均成本</title>
-    <link rel="stylesheet" href="styles.css?v=20260828-4" />
-    <script src="app.js?v=20260828-4" defer></script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0b0b'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='40' fill='%23f2efea' font-family='serif'%3E无%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css?v=20261011-1" />
+    <link rel="stylesheet" href="optimize.css?v=20261011-1" />
+    <script src="app.js?v=20261011-1" defer></script>
   </head>
   <body>
     <header class="topbar">
@@ -34,7 +36,7 @@
             <dd><span id="total-daily-cost">¥0.00</span><small> / 天</small></dd>
           </div>
         </dl>
-        <button class="primary-button" id="toggle-form" type="button" aria-expanded="true">
+        <button class="primary-button" id="toggle-form" type="button" aria-haspopup="dialog">
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M12 5v14M5 12h14" />
           </svg>
@@ -42,7 +44,8 @@
         </button>
       </section>
 
-      <section class="form-region is-open" id="form-region" aria-label="添加物品">
+      <dialog class="form-region" id="form-region" aria-labelledby="form-title">
+        <div class="dialog-heading"><h2 id="form-title">添加物品</h2><button type="button" id="close-form" class="close-button" aria-label="关闭">×</button></div>
         <form id="item-form" novalidate>
           <div class="field">
             <label for="name">物品名称</label>
@@ -61,16 +64,22 @@
 
           <div class="field">
             <label for="purchase-date">购买日期</label>
-            <input id="purchase-date" name="purchaseDate" type="date" />
+            <div class="date-input"><input id="purchase-date" name="purchaseDate" type="date" /><button type="button" id="open-calendar" aria-label="打开购买日期日历" aria-expanded="false" aria-controls="calendar"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 3v4M17 3v4M4 10h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" /></svg></button></div>
+            <div id="calendar" class="calendar" hidden>
+              <div class="calendar-heading"><button type="button" id="previous-month" aria-label="上个月">‹</button><div><select id="calendar-year" aria-label="年份"></select><select id="calendar-month" aria-label="月份"></select></div><button type="button" id="next-month" aria-label="下个月">›</button></div>
+              <div class="calendar-weekdays" aria-hidden="true"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+              <div id="calendar-days" class="calendar-days" role="group" aria-label="选择购买日期"></div>
+              <button type="button" id="calendar-today" class="calendar-today">今天</button>
+            </div>
             <small class="error" id="date-error" aria-live="polite"></small>
           </div>
 
           <div class="form-actions">
             <button class="save-button" id="save-button" type="submit">保存</button>
-            <button class="cancel-edit" id="cancel-edit" type="button" hidden>取消编辑</button>
+            <button class="cancel-edit" id="cancel-edit" type="button">取消</button>
           </div>
         </form>
-      </section>
+      </dialog>
 
       <section class="items-section" aria-labelledby="items-title">
         <div class="section-heading">
@@ -78,7 +87,7 @@
             <h2 id="items-title">我的物品</h2>
             <span id="item-count" aria-live="polite"></span>
           </div>
-          <label class="sort-control">
+          <div class="list-tools"><label class="search-control"><span class="sr-only">搜索物品</span><input id="search-items" type="search" placeholder="搜索物品" autocomplete="off" /></label><label class="sort-control">
             <span class="sr-only">排序方式</span>
             <select id="sort-order">
               <option value="price-desc">按原价格排序</option>
@@ -86,6 +95,7 @@
             </select>
             <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4" /></svg>
           </label>
+          </div>
         </div>
 
         <div class="ledger" id="ledger">
@@ -96,7 +106,9 @@
           <p>还没有物品。</p>
           <button type="button" id="empty-add">添加第一件物品</button>
         </div>
+        <p id="search-empty" class="search-empty" hidden>没有找到匹配的物品。</p>
       </section>
+      <footer class="page-footer"><span>每天变轻一点。<small>日均成本 = 原价 ÷ 拥有天数（含购买当天）</small></span><div><button type="button" id="export-items">导出备份</button><button type="button" id="import-items">导入备份</button><input id="import-file" type="file" accept="application/json,.json" hidden /></div></footer>
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
